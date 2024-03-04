@@ -10,7 +10,11 @@ const {
   bookChapterWithVersesAndTranslations,
 } = require('../controllers/auth')
 
-router.get('/all-books', allBooks)
+const { readConfigfilemiddleware } = require('../middleware/settings')
+const { checkFavorite, addFavorite } = require('../controllers/settings')
+
+router.post('/favorites', checkFavorite, addFavorite)
+router.get('/all-books', readConfigfilemiddleware, allBooks)
 router.get('/all-translations', allTranslations)
 router.post('/all-chapters', bookChapterWithVerses)
 router.post('/book-all-chapters', bookWithAllChapters)

@@ -1,13 +1,14 @@
 const axios = require('axios')
 const { bible_api } = require('../config')
 
-console.log(bible_api)
+console.log(bible_api, process.env.BIBLE_API)
 
 axios.defaults.baseURL = bible_api
 
 exports.allBooks = async (req, res) => {
   const { data } = await axios.get('/books')
-  res.json(data)
+  // res.json(data)
+  res.json({ data, settings: req.appconfig })
   // console.log('successfully sent and retrieved')
 }
 

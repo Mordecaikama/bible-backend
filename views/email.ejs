@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reset Password Link</title>
+    <style>
+      body {
+        margin: 0;
+        background-color: #cccccc;
+      }
+      table {
+        border-spacing: 0;
+      }
+      td {
+        padding: 0;
+      }
+      img {
+        border: 0;
+      }
+
+      .wrapper {
+        width: 100%;
+        table-layout: fixed;
+        background-color: #cccccc;
+        padding-bottom: 60px;
+      }
+
+      .main {
+        background-color: #ffffff;
+        margin: 0 auto;
+        width: 100%;
+        max-width: 600px;
+        border-spacing: 0;
+        font-family: sans-serif;
+        color: #303233;
+      }
+
+      .two-columns {
+        text-align: center;
+        font-size: 0;
+      }
+
+      .two-columns .column {
+        width: 100%;
+        max-width: 300px;
+        display: inline-block;
+        vertical-align: top;
+      }
+    </style>
+  </head>
+  <body style="width: 100vw; margin: 0 auto">
+    <!-- <center class="wrapper">
+      <table class="main"></table>
+      <tr>
+        <td height="8" style="background-color: #171a1b"></td>
+      </tr> -->
+
+      <!-- LOGO SECTION  -->
+      <!-- <tr>
+        <td style="padding: 14px 0 4px">
+          <table width="100%">
+            <tr>
+              <td class="two-columns">
+                <table class="column">
+                  <tr>
+                    <td style="padding: 0 62px 10px">
+                      <a
+                        ><img
+                          src="/uploads/images/logo.png"
+                          alt="Logo"
+                          width="180"
+                          title="Logo"
+                      /></a>
+                    </td>
+                  </tr>
+                </table>
+
+                <table class="column">
+                  <tr>
+                    <td style="padding: 0 62px 10px">
+                      <a
+                        ><img
+                          src="/uploads/images/logo.png"
+                          alt="Logo"
+                          width="180"
+                          title="Logo"
+                      /></a>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr> -->
+    </center>
+    <div
+      style="
+        border: 0.001rem solid rgb(235, 233, 233);
+        padding: 2rem;
+        width: 70vw;
+        text-align: center;
+      "
+    >
+      <h4>Hello <%=username%></h4>
+      <p>
+        You have requested to reset the password to your account on Biblekama.org,
+        Use the code below to reset your password.
+        
+      </p>
+
+      <h4><%=code%></h4>
+
+      <span>This Reset Code is valid for 10 minutes</span>
+    </div>
+
+    <!-- <table
+      role="presentation"
+      cellspacing="0"
+      style="border: 0; width: 100%"
+    ></table> -->
+  </body>
+</html>
