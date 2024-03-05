@@ -144,6 +144,8 @@ exports.updateUser = async (req, res) => {
         user: {
           _id: user._id,
           name: user.name,
+          email: user.email,
+          googleid: user?.googleid ? user?.googleid : null,
           color: user.color,
           favorites: user.favorites,
         },
@@ -301,7 +303,7 @@ exports.verifyCode = async (req, res) => {
 
   // if user not found
   if (!user) {
-    res.json({ error: 'Email or reset code is invalid' })
+    res.json({ error: 'Reset code is invalid' })
   } else {
     user.code = ''
     await user.save()
