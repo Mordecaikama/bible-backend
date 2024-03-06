@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const passport = require('passport')
 const { client } = require('../config')
-const User = require('../models/user')
+const { loginSuccess, loginFailed, logout } = require('../controllers/settings')
 
 const handleErrors = (err) => {
   let error = {
@@ -17,93 +17,11 @@ const handleErrors = (err) => {
   return error
 }
 
-router.get('/login/success', (req, res) => {
-  if (req.user) {
-    User.findOne({ googleid: req.user.id }).then((currentUser) => {
-      if (currentUser) {
-        res.status(200).json({
-          success: true,
-          message: 'successful',
-          user: {
-            _id: currentUser._id,
-            name: currentUser.name,
-            email: currentUser.email,
-            googleid: currentUser.googleid,
-            color: currentUser.color,
-            favorites: currentUser.favorites,
-          },
-        })
-      } else {
-        if (req.user.provider === 'google') {
-          new User({
-            name: req.user.displayName,
-            email: req.user.email,
-            googleid: req.user.id,
-            color: '#781111',
-          }).save((err, newUser) => {
-            if (err) {
-              const errors = handleErrors(err)
-              res.json({ error: errors })
-            } else {
-              res.status(200).json({
-                success: true,
-                message: 'successful',
-                user: {
-                  _id: newUser._id,
-                  name: newUser.name,
-                  email: newUser.email,
-                  googleid: newUser.googleid,
-                  color: newUser.color,
-                  favorites: newUser.favorites,
-                },
-              })
-            }
-          })
-        } else if (req.user.provider === 'github') {
-          new User({
-            name: req.user.displayName
-              ? req.user.displayName
-              : req.user.username,
-            email: req.user?.emails[0].value,
-            googleid: req.user.id,
-            color: '#781111',
-          }).save((err, newUser) => {
-            if (err) {
-              const errors = handleErrors(err)
-              res.json({ error: errors })
-            } else {
-              res.status(200).json({
-                success: true,
-                message: 'successful',
-                user: {
-                  _id: newUser._id,
-                  name: newUser.name,
-                  email: newUser.email,
-                  googleid: newUser.googleid,
-                  color: newUser.color,
-                  favorites: newUser.favorites,
-                },
-              })
-            }
-          })
-        }
-      }
-    })
-  }
-})
+router.get('/login/success', loginSuccess)
 
-router.get('/login/failed', (req, res) => {
-  res.status(401).json({
-    success: false,
-    message: 'failure',
-  })
-})
+router.get('/login/failed', loginFailed)
 
-router.get('/logout', (req, res) => {
-  req.logout()
-  res.cookie('session', '', { expires: new Date(0) })
-  res.redirect(client)
-})
+router.get('/logout', logout)
 
 router.get(
   '/google',

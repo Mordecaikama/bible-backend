@@ -1,5 +1,19 @@
 const fs = require('fs')
 const User = require('../models/user')
+const { client } = require('../config')
+
+const handleErrors = (err) => {
+  let error = {
+    email: '',
+  }
+
+  if (err.code === 11000) {
+    error.email = 'this email is taken'
+    return error
+  }
+
+  return error
+}
 
 exports.writefile = (req, res) => {
   const data = JSON.stringify(req.body, null, 2)
@@ -54,4 +68,91 @@ exports.addFavorite = (req, res) => {
       }
     )
   }
+}
+
+exports.loginSuccess = (req, res) => {
+  if (req.user) {
+    User.findOne({ googleid: req.user.id }).then((currentUser) => {
+      if (currentUser) {
+        res.status(200).json({
+          success: true,
+          message: 'successful',
+          user: {
+            _id: currentUser._id,
+            name: currentUser.name,
+            email: currentUser.email,
+            googleid: currentUser.googleid,
+            color: currentUser.color,
+            favorites: currentUser.favorites,
+          },
+        })
+      } else {
+        if (req.user.provider === 'google') {
+          new User({
+            name: req.user.displayName,
+            email: req.user.email,
+            googleid: req.user.id,
+            color: '#781111',
+          }).save((err, newUser) => {
+            if (err) {
+              const errors = handleErrors(err)
+              res.json({ error: errors })
+            } else {
+              res.status(200).json({
+                success: true,
+                message: 'successful',
+                user: {
+                  _id: newUser._id,
+                  name: newUser.name,
+                  email: newUser.email,
+                  googleid: newUser.googleid,
+                  color: newUser.color,
+                  favorites: newUser.favorites,
+                },
+              })
+            }
+          })
+        } else if (req.user.provider === 'github') {
+          new User({
+            name: req.user.displayName
+              ? req.user.displayName
+              : req.user.username,
+            email: req.user?.emails[0].value,
+            googleid: req.user.id,
+            color: '#781111',
+          }).save((err, newUser) => {
+            if (err) {
+              const errors = handleErrors(err)
+              res.json({ error: errors })
+            } else {
+              res.status(200).json({
+                success: true,
+                message: 'successful',
+                user: {
+                  _id: newUser._id,
+                  name: newUser.name,
+                  email: newUser.email,
+                  googleid: newUser.googleid,
+                  color: newUser.color,
+                  favorites: newUser.favorites,
+                },
+              })
+            }
+          })
+        }
+      }
+    })
+  }
+}
+exports.loginFailed = (req, res) => {
+  res.status(401).json({
+    success: false,
+    message: 'failure',
+  })
+}
+
+exports.logout = (req, res) => {
+  req.logout()
+  res.cookie('session', '', { expires: new Date(0) })
+  res.redirect(client)
 }

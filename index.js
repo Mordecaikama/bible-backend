@@ -11,8 +11,8 @@ const passport = require('passport')
 const path = require('path')
 
 const authRoutes = require('./routes/auth')
-const authSettings = require('./routes/settings')
-const authUsers = require('./routes/user')
+// const authSettings = require('./routes/settings')
+// const authUsers = require('./routes/user')
 
 const morgan = require('morgan')
 
@@ -47,8 +47,8 @@ app.use(cors({ origin: true, credentials: true }))
 app.use(morgan('dev'))
 // route middlewares
 app.use('/api', authRoutes)
-app.use('/api', authUsers)
-app.use('/api/auth', authSettings)
+// app.use('/api', authUsers)
+// app.use('/api/auth', authSettings)
 
 app.use((err, req, res, next) => {
   const status = err.status || 500
