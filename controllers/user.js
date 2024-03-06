@@ -67,10 +67,8 @@ exports.create_User = async (req, res, next) => {
 exports.get_User = async (req, res) => {
   // a user logsin to an organisational portal
   const { email, password } = req.body
-  console.log(req.body)
   try {
     const user = await User.login(email, password)
-    console.log(user)
     const token = createToken(user._id)
     res.cookie('session', token, {
       httpOnly: true,
@@ -93,7 +91,6 @@ exports.get_User = async (req, res) => {
     })
   } catch (error) {
     const errors = handleErrors(error)
-    console.log(error, 'error  s ', errors)
     res.send({ errors })
   }
 }
