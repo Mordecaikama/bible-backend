@@ -15,7 +15,6 @@ exports.writefile = (req, res) => {
 //checks Favorite
 exports.checkFavorite = (req, res, next) => {
   const data = req.body
-  console.log(data)
   User.findOneAndUpdate(
     { _id: data.userId, 'favorites.id': { $eq: data?.data?.id } },
     {
@@ -40,17 +39,15 @@ exports.checkFavorite = (req, res, next) => {
 exports.addFavorite = (req, res) => {
   const data = req.body
   // res.json({ data: data })
-  console.log(data)
 
   if (!data.favorite) {
-    console.log('no data ', data?.data)
     User.findOneAndUpdate(
       { _id: data?.userId },
       { $push: { favorites: data?.data } },
       { new: true, select: { name: 1, favorites: 1, color: 1, notes: 1 } },
       (error, data) => {
         if (error || !data) {
-          console.log(error, 'error here')
+          return false
         }
 
         res.json({ data })

@@ -7,7 +7,6 @@ const { transporter } = require('../helpers/nodeMail')
 const ejs = require('ejs')
 const path = require('path')
 
-// console.log(cookieKey)
 const handleErrors = (err) => {
   let error = {
     name: '',
@@ -47,8 +46,6 @@ const createToken = (id) => {
 }
 
 exports.create_User = async (req, res, next) => {
-  // console.log(req.body)
-
   const salt = await bcrypt.genSalt()
   req.body.password = await bcrypt.hash(req.body.password, salt)
 
@@ -66,8 +63,6 @@ exports.create_User = async (req, res, next) => {
 exports.get_User = async (req, res) => {
   // a user logsin to an organisational portal
   const { email, password } = req.body
-  // console.log('user ', req.cookie, ' attempting to login')
-  // console.log(req.cookies)
   try {
     const user = await User.login(email, password)
     const token = createToken(user._id)
@@ -98,18 +93,14 @@ exports.get_User = async (req, res) => {
 
 exports.Profile = (req, res) => {
   const token = req.cookies.session
-  // console.log(token)
 
   if (token) {
     jwt.verify(token, cookieKey, async (err, decodedToken) => {
       if (err) {
-        // console.log('DONE')
       } else {
-        // console.log(decodedToken, 'decodedtoken')
         let user = await User.findById(decodedToken.id).select(
           '-password -acc_setup '
         )
-        // console.log(user)
         res.status(200).json({
           success: true,
           message: 'successfull',
@@ -160,11 +151,10 @@ exports.checkOldpassword = async (req, res) => {
   // const { password, newpass } = req.body
   const salt = await bcrypt.genSalt()
   const hashedPassword = await bcrypt.hash(req.body.newpass, salt)
-  // console.log(req.body)
 
   try {
     const user = await User.login(req.body.email, req.body.password)
-    // console.log(user)
+
     if (user) {
       req.body.password = hashedPassword // changes old to new
       User.findOneAndUpdate(
@@ -196,7 +186,6 @@ exports.checkOldpassword = async (req, res) => {
 exports.forgotPassword = async (req, res) => {
   //email is reset after 5mins or 300,000
   const { email } = req.body
-  // console.log(email)
 
   // generate code
   const resetCode = nanoid(5).toUpperCase()
@@ -225,7 +214,6 @@ exports.forgotPassword = async (req, res) => {
         }
         // send email
         transporter.sendMail(emailData, (err, data) => {
-          // console.log(err, data)
           if (err) {
             res.json({
               errors: false,
@@ -250,7 +238,6 @@ exports.forgotPassword = async (req, res) => {
                   }
                 )
               }
-              // console.log('timer triggered')
             }),
 
           300000
@@ -284,20 +271,18 @@ exports.resetPassword = async (req, res) => {
       const salt = await bcrypt.genSalt()
       user.password = await bcrypt.hash(password, salt)
       user.code = ''
-      // console.log(user)
+
       await user.save()
       res.json({ ok: true })
     }
   } catch (err) {
-    console.log(err)
+    return false
   }
 }
 
 // verifies pin to be true after code is entered
 exports.verifyCode = async (req, res) => {
   const { code } = req.body
-
-  // console.log(req.body, 'code ', code.toUpperCase())
 
   const user = await User.findOne({ code: req.body.code.toUpperCase() })
 
@@ -315,8 +300,6 @@ exports.verifyCode = async (req, res) => {
 exports.confirmEmail = async (req, res) => {
   const { code } = req.body
 
-  // console.log(req.body, 'code ', code.toUpperCase())
-
   const user = await User.findOne({ code: req.body.code.toUpperCase() })
 
   // if user not found
@@ -333,7 +316,6 @@ exports.confirmEmail = async (req, res) => {
 exports.verifyEmail = async (req, res) => {
   //email is reset after 5mins or 300,000
   const { email } = req.body
-  // console.log(email)
 
   // generate code
   const resetCode = nanoid(5).toUpperCase()
@@ -362,7 +344,6 @@ exports.verifyEmail = async (req, res) => {
         }
         // send email
         transporter.sendMail(emailData, (err, data) => {
-          console.log(err, data)
           if (err) {
             res.json({
               error: false,
@@ -385,7 +366,6 @@ exports.verifyEmail = async (req, res) => {
                   }
                 )
               }
-              // console.log('timer triggered')
             }),
 
           300000

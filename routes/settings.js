@@ -21,7 +21,6 @@ router.get('/login/success', (req, res) => {
   if (req.user) {
     User.findOne({ googleid: req.user.id }).then((currentUser) => {
       if (currentUser) {
-        // console.log(currentUser)
         res.status(200).json({
           success: true,
           message: 'successful',
@@ -61,7 +60,6 @@ router.get('/login/success', (req, res) => {
             }
           })
         } else if (req.user.provider === 'github') {
-          console.log('github')
           new User({
             name: req.user.displayName
               ? req.user.displayName
@@ -95,7 +93,6 @@ router.get('/login/success', (req, res) => {
 })
 
 router.get('/login/failed', (req, res) => {
-  // console.log('failed to login')
   res.status(401).json({
     success: false,
     message: 'failure',
@@ -103,7 +100,6 @@ router.get('/login/failed', (req, res) => {
 })
 
 router.get('/logout', (req, res) => {
-  // console.log('logged out')
   req.logout()
   res.cookie('session', '', { expires: new Date(0) })
   res.redirect(client)

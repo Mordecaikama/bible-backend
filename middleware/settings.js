@@ -9,7 +9,7 @@ exports.readConfigfilemiddleware = (req, res, next) => {
       req.appconfig = doc
       next()
     } else {
-      console.log(err)
+      return false
     }
   })
 }

@@ -21,12 +21,9 @@ const app = express()
 mongoose.set('strictQuery', false)
 mongoose
   .connect(db || null) // db is online resource, referenced at the top
-  .then((results) => {
-    // const res = results.watch()
-    console.log('connected to db successfully')
-  })
+  .then((results) => false)
   .catch((e) => {
-    console.log(e)
+    res.json({ error: e })
   })
 
 // middlewares
@@ -54,12 +51,10 @@ app.use('/api', authUsers)
 app.use('/api/auth', authSettings)
 
 app.use((err, req, res, next) => {
-  // console.log(err)
-  // res.status(err.status).json(err)
   const status = err.status || 500
   res.status(status)
 })
 
 const port = process.env.PORT || 8000
 
-app.listen(port, () => console.log('Server running on port 8000'))
+app.listen(port, () => false)
