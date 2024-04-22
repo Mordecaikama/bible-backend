@@ -18,5 +18,12 @@
     "#064f94",
     ""
   ],
-  "favoriteColor": ""
+  "notes": ["edit", "edit_note"],
+  "fontSizes": [
+    { "small": "0.98rem" },
+    { "base": "1.12rem" },
+    { "large": "1.35rem" },
+    { "xl": "1.56" },
+    { "2xl": "1.863rem" }
+  ]
 }

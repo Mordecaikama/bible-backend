@@ -37,7 +37,10 @@ exports.checkFavorite = (req, res, next) => {
         'favorites.$.notes': data?.data?.notes,
       },
     },
-    { new: true, select: { name: 1, favorites: 1, color: 1, notes: 1 } },
+    {
+      new: true,
+      select: { name: 1, email: 1, favorites: 1, config: 1, notes: 1 },
+    },
     (error, data) => {
       if (error || !data) {
         req.body.favorite = false
@@ -58,7 +61,10 @@ exports.addFavorite = (req, res) => {
     User.findOneAndUpdate(
       { _id: data?.userId },
       { $push: { favorites: data?.data } },
-      { new: true, select: { name: 1, favorites: 1, color: 1, notes: 1 } },
+      {
+        new: true,
+        select: { name: 1, email: 1, favorites: 1, notes: 1, config: 1 },
+      },
       (error, data) => {
         if (error || !data) {
           return false
@@ -84,6 +90,7 @@ exports.loginSuccess = (req, res) => {
             googleid: currentUser.googleid,
             color: currentUser.color,
             favorites: currentUser.favorites,
+            config: currentUser.config,
           },
         })
       } else {
@@ -93,6 +100,7 @@ exports.loginSuccess = (req, res) => {
             email: req.user.email,
             googleid: req.user.id,
             color: '#781111',
+            config: req.default,
           }).save((err, newUser) => {
             if (err) {
               const errors = handleErrors(err)
@@ -108,6 +116,7 @@ exports.loginSuccess = (req, res) => {
                   googleid: newUser.googleid,
                   color: newUser.color,
                   favorites: newUser.favorites,
+                  config: newUser.config,
                 },
               })
             }
@@ -117,9 +126,10 @@ exports.loginSuccess = (req, res) => {
             name: req.user.displayName
               ? req.user.displayName
               : req.user.username,
-            email: req.user?.emails[0].value,
+            email: req.user.emails[0].value,
             googleid: req.user.id,
             color: '#781111',
+            config: req.default,
           }).save((err, newUser) => {
             if (err) {
               const errors = handleErrors(err)
@@ -135,6 +145,7 @@ exports.loginSuccess = (req, res) => {
                   googleid: newUser.googleid,
                   color: newUser.color,
                   favorites: newUser.favorites,
+                  config: newUser.config,
                 },
               })
             }

@@ -25,6 +25,7 @@ const userSchema = new Schema(
     },
     googleid: String,
     favorites: [],
+    config: {},
     color: String,
     code: '',
     acc_setup: {

@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken')
 const { cookieKey, Nodemailer_email } = require('../config')
 const { transporter } = require('../helpers/nodeMail')
 const ejs = require('ejs')
-const path = require('path')
+require('dotenv').config()
 
 const handleErrors = (err) => {
   let error = {
@@ -53,6 +53,9 @@ exports.create_User = async (req, res, next) => {
   const salt = await bcrypt.genSalt()
   req.body.password = await bcrypt.hash(req.body.password, salt)
 
+  const appconfig = req.default
+  req.body.config = appconfig
+
   const user = new User(req.body)
   user.save((err, data) => {
     if (err) {
@@ -87,6 +90,7 @@ exports.get_User = async (req, res) => {
         email: user.email,
         color: user.color,
         favorites: user.favorites,
+        config: user.config,
       },
     })
   } catch (error) {
@@ -103,7 +107,7 @@ exports.Profile = (req, res) => {
       if (err) {
       } else {
         let user = await User.findById(decodedToken.id).select(
-          '-password -acc_setup '
+          '-password -acc_setup -updatedAt -createdAt -code '
         )
         res.status(200).json({
           success: true,
@@ -143,6 +147,7 @@ exports.updateUser = async (req, res) => {
           googleid: user?.googleid ? user?.googleid : null,
           color: user.color,
           favorites: user.favorites,
+          config: user.config,
         },
       })
     }
@@ -340,7 +345,7 @@ exports.verifyEmail = async (req, res) => {
         })
 
         const emailData = {
-          from: Nodemailer_email,
+          from: process.env.Nodemailer_email,
           to: user.email,
           subject: 'Verify Your Email',
           html: data,
@@ -348,6 +353,7 @@ exports.verifyEmail = async (req, res) => {
         }
         // send email
         transporter.sendMail(emailData, (err, data) => {
+          console.log('from here ', 'error ', err, 'data ', data)
           if (err) {
             res.json({
               error: false,
@@ -376,6 +382,24 @@ exports.verifyEmail = async (req, res) => {
         )
       }
       return () => clearTimeout(timers)
+    }
+  )
+}
+
+exports.updateSettings = (req, res) => {
+  const { _id, ...rest } = req.election
+
+  User.findOneAndUpdate(
+    { _id: _id },
+    { $set: { config: req.body } },
+    { new: true },
+    (err, doc) => {
+      if (err) {
+        return res.status(400).json({
+          error: 'Settings could not be updated',
+        })
+      }
+      res.json(doc)
     }
   )
 }

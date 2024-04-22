@@ -21,9 +21,13 @@ const app = express()
 mongoose.set('strictQuery', false)
 mongoose
   .connect(db || null) // db is online resource, referenced at the top
-  .then((results) => false)
+  .then((results) =>
+    // false
+    console.log('sucessfully connected ', db)
+  )
   .catch((e) => {
-    res.json({ error: e })
+    console.log(e)
+    // res.json({ error: e })
   })
 
 // middlewares
@@ -43,6 +47,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(express.json({ limit: '4mb' }))
 app.use(express.urlencoded({ extended: true }))
 app.use(cors({ origin: true, credentials: true }))
+app.use(express.static('uploads'))
 
 app.use(morgan('dev'))
 // route middlewares

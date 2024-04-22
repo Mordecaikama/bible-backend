@@ -18,7 +18,7 @@ passport.use(
     {
       clientID: googleclientID,
       clientSecret: googleclientSecret,
-      callbackURL: '/api/auth/google/callback',
+      callbackURL: 'https://biblekama.org/api/google/callback',
     },
     function (accessToken, refreshToken, profile, done) {
       done(null, profile)
@@ -46,7 +46,7 @@ passport.use(
     {
       clientID: GITHUB_CLIENT_ID,
       clientSecret: GITHUB_CLIENT_SECRET,
-      callbackURL: '/api/auth/github/callback',
+      callbackURL: 'http://localhost:8000/api/github/callback',
       scope: ['user:email'],
     },
     function (accessToken, refreshToken, profile, done) {

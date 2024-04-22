@@ -2,6 +2,8 @@ const express = require('express')
 
 const router = express.Router()
 
+const { readConfigfilemiddleware } = require('../middleware/settings')
+
 const {
   create_User,
   verifyEmail,

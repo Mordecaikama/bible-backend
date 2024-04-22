@@ -43,11 +43,14 @@ const {
   bookChapterWithVersesAndTranslations,
 } = require('../controllers/auth')
 
-const { readConfigfilemiddleware } = require('../middleware/settings')
+const {
+  readConfigfilemiddleware,
+  readSettingsfilemiddleware,
+} = require('../middleware/settings')
 const { checkFavorite, addFavorite } = require('../controllers/settings')
 
 router.post('/favorites', checkFavorite, addFavorite)
-router.get('/all-books', readConfigfilemiddleware, allBooks)
+router.get('/all-books', readSettingsfilemiddleware, allBooks)
 router.get('/all-translations', allTranslations)
 router.post('/all-chapters', bookChapterWithVerses)
 router.post('/book-all-chapters', bookWithAllChapters)
@@ -70,7 +73,7 @@ router.get(
 )
 
 router.get(
-  '/auth/google/callback',
+  '/google/callback',
   passport.authenticate('google', {
     successRedirect: client,
     failureRedirect: '/login/failed',
@@ -83,7 +86,7 @@ router.get(
 )
 
 router.get(
-  '/auth/github/callback',
+  '/github/callback',
   passport.authenticate('github', {
     successRedirect: client,
     failureRedirect: '/login/failed',
@@ -92,7 +95,7 @@ router.get(
 
 // user login information
 
-router.post('/signup', create_User, verifyEmail)
+router.post('/signup', readConfigfilemiddleware, create_User, verifyEmail)
 
 router.post('/login', get_User)
 

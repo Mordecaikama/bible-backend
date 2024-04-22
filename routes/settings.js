@@ -3,6 +3,7 @@ const router = express.Router()
 const passport = require('passport')
 const { client } = require('../config')
 const { loginSuccess, loginFailed, logout } = require('../controllers/settings')
+const { readConfigFileMidleware } = require('../middleware/settings')
 
 const handleErrors = (err) => {
   let error = {
@@ -17,7 +18,7 @@ const handleErrors = (err) => {
   return error
 }
 
-router.get('/login/success', loginSuccess)
+router.get('/login/success', readConfigFileMidleware, loginSuccess)
 
 router.get('/login/failed', loginFailed)
 
